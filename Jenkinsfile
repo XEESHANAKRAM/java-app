@@ -3,15 +3,11 @@ pipeline {
 
     tools {
         jdk 'JDK'
-        nodejs 'NodeJS'
+        maven 'maven3'
     }
 
     parameters {
         string(name: 'ECR_REPO_NAME', defaultValue: 'java-app', description: 'Enter repository name')
-    }
-
-    environment {
-        SCANNER_HOME = tool 'SonarQube-Scanner'
     }
 
     stages {
@@ -40,12 +36,6 @@ pipeline {
            }
        }
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
         stage('Trivy File System Scan') {
     steps {
         sh '''#!/bin/bash
@@ -73,8 +63,6 @@ pipeline {
                 sh "trivy image xeeshanakram/java-app:latest > trivy.txt"
             }
         }
-
-        
     }
 
     post {
